@@ -22,9 +22,32 @@ namespace Business_Layer.Objects
                 {
                     throw new ArgumentException(nameof(name));
                 }
+
+                name = value;
             }
         }
 
         public List<Product> GetMealTime { get; set; }
+
+        public MealTime(string name)
+        {
+            this.Name = name;
+            GetMealTime = new();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is MealTime mealTime)
+            {
+                if (this.Name == mealTime.Name && this.GetMealTime == mealTime.GetMealTime)
+                {
+                    return true;
+                }
+            }
+
+
+            return false;
+        }
+
     }
 }
