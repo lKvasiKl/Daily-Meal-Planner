@@ -53,7 +53,7 @@ namespace Business_Layer.Objects
             }
             set
             {
-                if (value <= 0)
+                if (value < 0)
                 {
                     throw new ArgumentOutOfRangeException(nameof(protein));
                 }
@@ -70,7 +70,7 @@ namespace Business_Layer.Objects
             }
             set
             {
-                if (value <= 0)
+                if (value < 0)
                 {
                     throw new ArgumentOutOfRangeException(nameof(fats));
                 }
@@ -87,7 +87,7 @@ namespace Business_Layer.Objects
             }
             set
             {
-                if (value <= 0)
+                if (value < 0)
                 {
                     throw new ArgumentOutOfRangeException(nameof(carbs));
                 }
@@ -113,7 +113,7 @@ namespace Business_Layer.Objects
             }
         }
 
-        //public Product() { }
+        public Product() { }
 
         public override int GetHashCode()
         {

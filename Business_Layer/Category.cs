@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +10,9 @@ namespace Business_Layer.Objects
     public class Category
     {
         private string name;
+        public string description;
 
+        [XmlAttribute("name")]
         public string Name
         {
             get
@@ -27,6 +30,7 @@ namespace Business_Layer.Objects
             }
         }
 
+        [XmlArray("Products")]
         public HashSet<Product> GetProducts { get; set; }
 
         public Category() { }
