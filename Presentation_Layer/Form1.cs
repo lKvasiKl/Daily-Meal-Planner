@@ -98,7 +98,7 @@ namespace Daily_Meal_Planner
         {
             foreach(MealTime mealTime in Servise.GetRation())
             {
-                if(mealTime == this.treeView2.SelectedNode.Parent.Tag as MealTime)
+                if (mealTime == this.treeView2.SelectedNode.Parent.Tag as MealTime)
                 {
                     mealTime.GetMealTime.Remove(this.treeView2.SelectedNode.Tag as Product);
                     this.treeView2.SelectedNode.Remove();
@@ -150,7 +150,7 @@ namespace Daily_Meal_Planner
         private void treeView2_DragOver(object sender, DragEventArgs e)
         {
             Point targetPoint = treeView2.PointToClient(new Point(e.X, e.Y));
-            treeView1.SelectedNode = treeView1.GetNodeAt(targetPoint);
+            treeView1.SelectedNode = treeView2.GetNodeAt(targetPoint);
         }
 
         private void treeView2_DragDrop(object sender, DragEventArgs e)
@@ -188,5 +188,63 @@ namespace Daily_Meal_Planner
             }
         }
 
+        public List<TreeNode> SearchNodes(string searchText, TreeNode startNode)
+        {
+            List<TreeNode> currentNode = new();
+            while (startNode != null)
+            {
+                if (startNode.Text.ToLower().Contains(searchText.ToLower()))
+                {
+
+                    currentNode.Add(startNode);
+                }
+
+                if (startNode.Nodes.Count != 0)
+                {
+                    foreach (TreeNode node in SearchNodes(searchText, startNode.Nodes[0]))
+                    {
+                        currentNode.Add(node);
+                    }        
+                }
+
+                startNode = startNode.NextNode;
+            }
+            
+            return currentNode;
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            string searchText = this.textBox1.Text;
+            string lastSearchText = "";
+            foreach (TreeNode node in this.treeView1.Nodes)
+            {
+                node.BackColor = Color.Transparent;
+                node.Collapse();
+                foreach (TreeNode node2 in node.Nodes)
+                {
+                    node2.BackColor = Color.Transparent;
+                }
+            }
+
+            if (string.IsNullOrEmpty(searchText))
+            {
+                return;
+            }
+
+            if (lastSearchText != searchText)
+            {
+                lastSearchText = searchText;
+                foreach (TreeNode node in SearchNodes(lastSearchText, this.treeView1.Nodes[0]))
+                {
+                    node.BackColor = Color.LightGreen;
+                    if (node.Parent != null)
+                    {
+                        node.Parent.Expand();
+                    }
+
+                }
+            } 
+        }
     }
 }
