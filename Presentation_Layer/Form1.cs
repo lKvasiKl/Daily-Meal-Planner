@@ -29,7 +29,6 @@ namespace Daily_Meal_Planner
 
         private void FillTreeViewProducts()
         {
-            //Load Categories and Products
             Servise.SetPath(@"D:\The_3_semestr\Daily Meal Planner\Data_Layer\bin\Debug\net5.0\FoodProducts.xml");
             int i = 0;
             this.treeView1.ImageList = imageList1;
