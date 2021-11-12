@@ -31,6 +31,7 @@ namespace Daily_Meal_Planner
         {
             Servise.SetPath(@"D:\The_3_semestr\Daily Meal Planner\Data_Layer\bin\Debug\net5.0\FoodProducts.xml");
             int i = 0;
+            string message = string.Empty;
             this.treeView1.ImageList = imageList1;
             this.treeView1.BeginUpdate();
             this.treeView1.Nodes.Clear();
@@ -43,11 +44,18 @@ namespace Daily_Meal_Planner
                 int j = 0;
                 foreach (Product product in Servise.GetProductsOf(category.Name))
                 {
-                    this.treeView1.Nodes[i].Nodes.Add(product.Name);
-                    this.treeView1.Nodes[i].Nodes[j].ImageIndex = i;
-                    this.treeView1.Nodes[i].Nodes[j].SelectedImageIndex = 25;
-                    this.treeView1.Nodes[i].Nodes[j].Tag = product;
-                    j++;
+                    if (product.Validate(ref message))
+                    {
+                        this.treeView1.Nodes[i].Nodes.Add(product.Name);
+                        this.treeView1.Nodes[i].Nodes[j].ImageIndex = i;
+                        this.treeView1.Nodes[i].Nodes[j].SelectedImageIndex = 25;
+                        this.treeView1.Nodes[i].Nodes[j].Tag = product;
+                        j++;
+                    }
+                    else
+                    {
+                        MessageBox.Show(message);
+                    }
                 }
 
                 i++;
@@ -58,12 +66,20 @@ namespace Daily_Meal_Planner
 
         private void FillTreeViewRation()
         {
+            string message = string.Empty;
             this.treeView2.BeginUpdate();
             this.treeView2.Nodes.Clear();
             this.treeView2.ImageList = imageList2;
             foreach (MealTime meal in Servise.GetRation())
             {
-                AddMealTime(meal);
+                if (meal.Validate(ref message))
+                {
+                    AddMealTime(meal);
+                }
+                else
+                {
+                    MessageBox.Show(message);
+                }
             }
 
             this.treeView2.EndUpdate();
@@ -216,7 +232,7 @@ namespace Daily_Meal_Planner
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             string searchText = this.textBox1.Text;
-            string lastSearchText = "";
+            string lastSearchText = string.Empty;
             foreach (TreeNode node in this.treeView1.Nodes)
             {
                 node.BackColor = Color.Transparent;
@@ -247,5 +263,104 @@ namespace Daily_Meal_Planner
             } 
         }
 
+        private void textBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (char.IsDigit(e.KeyChar) || e.KeyChar == '\b')
+            {
+                return;
+            }
+            else
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+            if (textBox2.Text != string.Empty)
+            {
+                Servise.SetUserWeight(Convert.ToDouble(this.textBox2.Text));
+            }
+        }
+
+        private void textBox3_TextChanged(object sender, EventArgs e)
+        {
+            if (textBox3.Text != string.Empty)
+            {
+                Servise.SetUserHeight(Convert.ToDouble(this.textBox3.Text));
+            }
+        }
+
+        private void textBox4_TextChanged(object sender, EventArgs e)
+        {
+            if (textBox4.Text != string.Empty)
+            {
+                Servise.SetUserAge(Convert.ToInt32(this.textBox4.Text));
+            }   
+        }
+
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+            DailyChangeIfEmpty();
+            Servise.SetUserActivity(1.2);
+            DailyRateChange();
+        }
+
+        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        {
+            DailyChangeIfEmpty();
+            Servise.SetUserActivity(1.375);
+            DailyRateChange();
+        }
+
+        private void radioButton3_CheckedChanged(object sender, EventArgs e)
+        {
+            DailyChangeIfEmpty();
+            Servise.SetUserActivity(1.55);
+            DailyRateChange();
+        }
+
+        private void radioButton4_CheckedChanged(object sender, EventArgs e)
+        {
+            DailyChangeIfEmpty();
+            Servise.SetUserActivity(1.725);
+            DailyRateChange();
+        }
+
+        private void textBox5_TextChanged(object sender, EventArgs e)
+        {
+            string massege = string.Empty;
+            if (Servise.UserValidate(ref massege))
+            {
+                this.textBox5.Text = Convert.ToString(Servise.GetDailyRate());
+            }
+            else
+            {
+                MessageBox.Show(massege);
+            }
+        }
+
+        private void DailyRateChange ()
+        {
+            if (this.textBox2.Text != string.Empty && this.textBox3.Text != string.Empty && this.textBox4.Text != string.Empty)
+            {
+                textBox5_TextChanged(this.textBox5, new EventArgs());
+            }
+            
+        }
+
+        private void DailyChangeIfEmpty ()
+        {
+            if (this.textBox2.Text == string.Empty || this.textBox3.Text == string.Empty || this.textBox4.Text == string.Empty)
+            {
+                Servise.SetUserActivity(0.0);
+                this.textBox5.Text = Convert.ToString(Servise.GetDailyRate());
+            }
+        }
+
+        private void textBox_Leave(object sender, EventArgs e)
+        {
+            DailyRateChange();
+        }
     }
 }

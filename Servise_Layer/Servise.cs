@@ -10,7 +10,8 @@ namespace Servise_Layer.Object
     {
         private static CategoryDAO? categoryDAO;
         private static ProductDAO? productDAO;
-        private static DailyRation ration;
+        private static DailyRation ration = new();
+        private static User user = new();
 
         public static void SetPath(string path)
         {
@@ -73,5 +74,34 @@ namespace Servise_Layer.Object
             ration.Remove(meal);
         }
 
+        public static void SetUserHeight(double height)
+        {
+            user.Height = height;
+        }
+
+        public static void SetUserWeight(double weight)
+        {
+            user.Weight = weight;
+        }
+
+        public static void SetUserAge(int age)
+        {
+            user.Age = age;
+        }
+
+        public static void SetUserActivity(double coef)
+        {
+            user.ActivityCoef = coef;
+        }
+
+        public static int GetDailyRate()
+        {
+            return (int)user.GetDailyRate();
+        }
+
+        public static bool UserValidate(ref string message)
+        {
+           return user.Validate(ref message);
+        }
     }
 }

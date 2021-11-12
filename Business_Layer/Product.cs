@@ -4,120 +4,110 @@ namespace Business_Layer.Objects
 {
     public class Product
     {
-        private string name;
-        private int gramms;
-        private float protein;
-        private float fats;
-        private float carbs;
-        private float calories;
+        BusinessRules rules = new();
 
-        public string Name
+        public string Name { get; set; }
+
+        public int Gramms { get; set; }
+
+        public float Protein { get; set; }
+
+        public float Fats { get; set; }
+
+        public float Carbs { get; set; }
+
+        public float Calories { get; set; }
+
+        public Product() 
         {
-            get
+            rules.rule += (Object obj, ref string message, ref bool isPossible) =>
             {
-                return name;
-            }
-            set
-            {
-                if (string.IsNullOrEmpty(value))
+                if (isPossible)
                 {
-                    throw new ArgumentException(nameof(name));
+                    if (obj is Product product && string.IsNullOrEmpty(product.Name))
+                    {
+                        message = "The Product name can't be empty!";
+                        isPossible = false;
+                    }
                 }
+            };
 
-                name = value;
-            }
-        }
-
-        public int Gramms
-        {
-            get
+            rules.rule += (Object obj, ref string message, ref bool isPossible) =>
             {
-                return gramms;
-            }
-            set
-            {
-                if (value <= 0)
+                if (isPossible)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(gramms));
+                    if (obj is Product product && product.Gramms <= 0)
+                    {
+                        message = "The Product gramms can't be zero or negative!";
+                        isPossible = false;
+                    }
                 }
+            };
 
-                gramms = value;
-            }
-        }
-
-        public float Protein
-        {
-            get
+            rules.rule += (Object obj, ref string message, ref bool isPossible) =>
             {
-                return protein;
-            }
-            set
-            {
-                if (value < 0)
+                if (isPossible)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(protein));
+                    if (obj is Product product && product.Protein < 0)
+                    {
+                        message = "The Product protein can't be zero or negative!";
+                        isPossible = false;
+                    }
                 }
+            };
 
-                protein = value;
-            }
-        }
-
-        public float Fats
-        {
-            get
+            rules.rule += (Object obj, ref string message, ref bool isPossible) =>
             {
-                return fats;
-            }
-            set
-            {
-                if (value < 0)
+                if (isPossible)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(fats));
+                    if (obj is Product product && product.Fats < 0)
+                    {
+                        message = "The Product fats can't be zero or negative!";
+                        isPossible = false;
+                    }
                 }
+            };
 
-                fats = value;
-            }
-        }
-
-        public float Carbs
-        {
-            get
+            rules.rule += (Object obj, ref string message, ref bool isPossible) =>
             {
-                return carbs;
-            }
-            set
-            {
-                if (value < 0)
+                if (isPossible)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(carbs));
+                    if (obj is Product product && product.Carbs < 0)
+                    {
+                        message = "The Product carbs can't be zero or negative!";
+                        isPossible = false;
+                    }
                 }
+            };
 
-                carbs = value;
-            }
-        }
-
-        public float Calories
-        {
-            get
+            rules.rule += (Object obj, ref string message, ref bool isPossible) =>
             {
-                return calories;
-            }
-            set
-            {
-                if (value <= 0)
+                if (isPossible)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(calories));
+                    if (obj is Product product && product.Fats < 0)
+                    {
+                        message = "The Product fats can't be zero or negative!";
+                        isPossible = false;
+                    }
                 }
+            };
 
-                calories = value;
-            }
+            rules.rule += (Object obj, ref string message, ref bool isPossible) =>
+            {
+                if (isPossible)
+                {
+                    if (obj is Product product && product.Calories < 0)
+                    {
+                        message = "The Product calories can't be zero or negative!";
+                        isPossible = false;
+                    }
+                }
+            };
         }
-
-        public Product() { }
 
         public override int GetHashCode()
         {
-            return name.GetHashCode();
+            return Name.GetHashCode();
         }
 
         public override bool Equals(object obj)
@@ -128,12 +118,19 @@ namespace Business_Layer.Objects
             }
 
             Product product = obj as Product;
-            if(product.name == this.name)
+            if(product.Name == this.Name)
             {
                 return true;
             }
 
             return false;
+        }
+
+        public bool Validate (ref string message)
+        {
+            bool result = true;
+            rules.rule(this, ref message, ref result);
+            return result;
         }
     }
 }

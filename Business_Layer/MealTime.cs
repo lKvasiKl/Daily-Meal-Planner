@@ -8,46 +8,31 @@ namespace Business_Layer.Objects
 {
     public class MealTime
     {
-        private string name;
-
-        public string Name
-        {
-            get
-            {
-                return name;
-            }
-            set
-            {
-                if (string.IsNullOrEmpty(value))
-                {
-                    throw new ArgumentException(nameof(name));
-                }
-
-                name = value;
-            }
-        }
-
+        BusinessRules rules = new();
+        public string Name { get; set; }
         public List<Product> GetMealTime { get; set; }
-
         public MealTime(string name)
         {
             this.Name = name;
             GetMealTime = new();
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is MealTime mealTime)
+            rules.rule += (Object obj, ref string massage, ref bool isPossible) =>
             {
-                if (this.Name == mealTime.Name && this.GetMealTime == mealTime.GetMealTime)
+                if (isPossible)
                 {
-                    return true;
-                }
-            }
-
-
-            return false;
+                    if (obj is MealTime mealTime && string.IsNullOrEmpty(mealTime.Name))
+                    {
+                        massage = "The Meal Time name can't be empty!";
+                        isPossible = false;
+                    }
+                }       
+            };
         }
-
+ 
+        public bool Validate(ref string message)
+        {
+            bool result = true;
+            rules.rule(this, ref message, ref result);
+            return result;
+        }
     }
 }
