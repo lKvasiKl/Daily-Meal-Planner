@@ -5,18 +5,62 @@ namespace Business_Layer.Objects
     public class Product
     {
         BusinessRules rules = new();
+        private float protein;
+        private float fats;
+        private float carbs;
+        private float calories;
 
         public string Name { get; set; }
 
         public int Gramms { get; set; }
 
-        public float Protein { get; set; }
+        public float Protein
+        {
+            get
+            {
+                return (Gramms * protein) / 100;
+            }
+            set
+            {
+                protein = value;
+            }
+        }
 
-        public float Fats { get; set; }
+        public float Fats 
+        { 
+            get
+            {
+                return (Gramms * fats) / 100;
+            }
+            set
+            {
+                fats = value;
+            }
+        }
 
-        public float Carbs { get; set; }
+        public float Carbs 
+        {
+            get
+            {
+                return (Gramms * carbs) / 100;
+            }
+            set
+            {
+                carbs = value;
+            }
+        }
 
-        public float Calories { get; set; }
+        public float Calories
+        {
+            get
+            {
+                return (Gramms * calories) / 100;
+            }
+            set
+            {
+                calories = value;
+            }
+        }
 
         public Product() 
         {
@@ -103,6 +147,17 @@ namespace Business_Layer.Objects
                     }
                 }
             };
+        }
+
+        public Product(Product product)
+        {
+            this.Name = product.Name;
+            this.Gramms = product.Gramms;
+            this.Protein = product.Protein;
+            this.Fats = product.Fats;
+            this.Carbs = product.Carbs;
+            this.Calories = product.Calories;
+
         }
 
         public override int GetHashCode()

@@ -179,7 +179,8 @@ namespace Daily_Meal_Planner
 
                 if (targetNode != null && draggedNode != null && targetNode is TreeNode meal && draggedNode.Tag is Product product)
                 {
-                    AddProductToMeal (meal, product);
+                    Product mealProduct = new Product(product);
+                    AddProductToMeal (meal, mealProduct);
                     if (e.Effect == DragDropEffects.Move)
                     {
                         draggedNode.Remove();
@@ -361,6 +362,55 @@ namespace Daily_Meal_Planner
         private void textBox_Leave(object sender, EventArgs e)
         {
             DailyRateChange();
+        }
+
+        private void treeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (sender is TreeView tree)
+            {
+                if (tree == treeView1)
+                {
+                    this.trackBar1.Enabled = false;
+                    if (e.Node.Tag is Product product)
+                    {
+                        ProductInfoChange(product);
+                    }
+                }
+                else if (tree == treeView2)
+                {
+                    this.trackBar1.Enabled = true;
+                    if (e.Node.Tag is Product product)
+                    {
+                        this.trackBar1.Enabled = true;
+                        ProductInfoChange(product);
+                    }
+                    else
+                    {
+                        this.trackBar1.Enabled = false;
+                    }
+                }
+
+                tree.SelectedNode = e.Node;
+            }  
+        }
+
+        private void ProductInfoChange(Product product)
+        {
+            this.textBox6.Text = Convert.ToString(Math.Round((double)product.Gramms, 2));
+            this.textBox7.Text = Convert.ToString(Math.Round((double)product.Calories, 2));
+            this.textBox8.Text = Convert.ToString(Math.Round((double)product.Protein, 2));
+            this.textBox9.Text = Convert.ToString(Math.Round((double)product.Fats, 2));
+            this.textBox10.Text = Convert.ToString(Math.Round((double)product.Carbs, 2));
+        }
+
+        private void trackBar1_Scroll(object sender, EventArgs e)
+        {
+            if (this.treeView2.SelectedNode.Tag is Product product)
+            {
+                product.Gramms = trackBar1.Value;
+                ProductInfoChange(product);
+            }
+           
         }
     }
 }
