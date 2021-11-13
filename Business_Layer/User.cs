@@ -63,5 +63,17 @@ namespace Business_Layer.Objects
         {
             return (447.593 + 9.247 * Weight + 3.098 * Height - 4.330 * Age) * ActivityCoef;
         }
+
+        public string GetActivity()
+        {
+            return ActivityCoef switch
+            {
+                1.2 => "Low",
+                1.375 => "Normal",
+                1.55 => "Average",
+                1725 => "High",
+                _ => string.Empty
+            };        
+        }
     }
 }

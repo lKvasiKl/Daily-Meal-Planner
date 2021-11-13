@@ -34,5 +34,54 @@ namespace Business_Layer.Objects
             rules.rule(this, ref message, ref result);
             return result;
         }
+
+        public void DelProduct(Product product)
+        {
+            GetMealTime.Remove(product);
+        }
+    
+        public float GetCalories()
+        {
+            float calories = 0f;
+            foreach(Product product in GetMealTime)
+            {
+                calories += product.Calories;
+            }
+
+            return calories;
+        }
+
+        public float GetProtein()
+        {
+            float protein = 0f;
+            foreach (Product product in GetMealTime)
+            {
+                protein += product.Protein;
+            }
+
+            return protein;
+        }
+
+        public float GetCarbs()
+        {
+            float carbs = 0f;
+            foreach (Product product in GetMealTime)
+            {
+                carbs += product.Carbs;
+            }
+
+            return carbs;
+        }
+
+        public float GetFats()
+        {
+            float fats = 0f;
+            foreach (Product product in GetMealTime)
+            {
+                fats += product.Fats;
+            }
+
+            return fats;
+        }
     }
 }

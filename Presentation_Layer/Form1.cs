@@ -108,6 +108,7 @@ namespace Daily_Meal_Planner
         {
             Servise.GetRation().Remove(this.treeView2.SelectedNode.Tag as MealTime);
             this.treeView2.SelectedNode.Remove();
+            this.progressBar2.Value = (int)Servise.GetCalories();
         }
 
         private void toolStripMenuItem4_Click(object sender, EventArgs e)
@@ -118,6 +119,7 @@ namespace Daily_Meal_Planner
                 {
                     mealTime.GetMealTime.Remove(this.treeView2.SelectedNode.Tag as Product);
                     this.treeView2.SelectedNode.Remove();
+                    this.progressBar2.Value = (int)Servise.GetCalories();
                     break;
                 }
             }
@@ -126,11 +128,6 @@ namespace Daily_Meal_Planner
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
             this.treeView2.SelectedNode.BeginEdit();
-        }
-
-        private void treeView2_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
-        {
-            this.treeView2.SelectedNode = e.Node;
         }
 
         private void treeView1_ItemDrag(object sender, ItemDragEventArgs e)
@@ -179,13 +176,15 @@ namespace Daily_Meal_Planner
 
                 if (targetNode != null && draggedNode != null && targetNode is TreeNode meal && draggedNode.Tag is Product product)
                 {
-                    Product mealProduct = new Product(product);
-                    AddProductToMeal (meal, mealProduct);
                     if (e.Effect == DragDropEffects.Move)
                     {
+                        (draggedNode.Parent.Tag as MealTime).DelProduct(product);
+
                         draggedNode.Remove();
                     }
 
+                    Product mealProduct = new Product(product);
+                    AddProductToMeal (meal, mealProduct);
                     targetNode.Expand();
                 }
             }
@@ -195,13 +194,25 @@ namespace Daily_Meal_Planner
         {
             if (mealNode.Tag is MealTime meal)
             {
-                int i = mealNode.Nodes.Count;
-                meal.GetMealTime.Add(product);
-                mealNode.Nodes.Add(product.Name);
-                mealNode.Nodes[i].Tag = product;
-                mealNode.Nodes[i].ImageIndex = 1;
-                mealNode.Nodes[i].SelectedImageIndex = 1;
-                mealNode.Nodes[i].ContextMenuStrip = this.contextMenuStrip3;
+                Product prbuff = product;
+                prbuff.Gramms = trackBar1.Value;
+                if (Servise.GetCalories() - product.Calories + prbuff.Calories < this.progressBar2.Maximum)
+                {
+                    int i = mealNode.Nodes.Count;
+                    meal.GetMealTime.Add(product);
+                    mealNode.Nodes.Add(product.Name);
+                    mealNode.Nodes[i].Tag = product;
+                    mealNode.Nodes[i].ImageIndex = 1;
+                    mealNode.Nodes[i].SelectedImageIndex = 1;
+                    mealNode.Nodes[i].ContextMenuStrip = this.contextMenuStrip3;
+                    this.textBox12.Text = Convert.ToString(Math.Round((double)Servise.GetCalories(), 2));
+                    this.progressBar2.Value = (int)Servise.GetCalories();
+                }
+                else
+                {
+                    trackBar1.Value = product.Gramms;
+                    MessageBox.Show("Current caloriec can't be more then 6000 kcal!");
+                }
             }
         }
 
@@ -334,6 +345,8 @@ namespace Daily_Meal_Planner
             if (Servise.UserValidate(ref massege))
             {
                 this.textBox5.Text = Convert.ToString(Servise.GetDailyRate());
+                this.textBox11.Text = Convert.ToString(Servise.GetDailyRate());
+                this.progressBar1.Value = Servise.GetDailyRate();
             }
             else
             {
@@ -374,6 +387,7 @@ namespace Daily_Meal_Planner
                     if (e.Node.Tag is Product product)
                     {
                         ProductInfoChange(product);
+                        this.trackBar1.Value = product.Gramms;
                     }
                 }
                 else if (tree == treeView2)
@@ -383,6 +397,7 @@ namespace Daily_Meal_Planner
                     {
                         this.trackBar1.Enabled = true;
                         ProductInfoChange(product);
+                        this.trackBar1.Value = product.Gramms;
                     }
                     else
                     {
@@ -407,10 +422,36 @@ namespace Daily_Meal_Planner
         {
             if (this.treeView2.SelectedNode.Tag is Product product)
             {
-                product.Gramms = trackBar1.Value;
-                ProductInfoChange(product);
+                Product prbuff = product;
+                prbuff.Gramms = trackBar1.Value;
+                if (Servise.GetCalories() - product.Calories + prbuff.Calories < this.progressBar2.Maximum)
+                {
+                    product.Gramms = trackBar1.Value;
+                    this.textBox12.Text = Convert.ToString(Math.Round((double)Servise.GetCalories(), 2));
+                    this.progressBar2.Value = (int)Servise.GetCalories();
+                    ProductInfoChange(product);
+                }
+                else
+                {
+                    trackBar1.Value = product.Gramms;
+                    MessageBox.Show("Current caloriec can't be more then 6000 kcal!");
+                }
             }
            
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (this.textBox2.Text != string.Empty && this.textBox3.Text != string.Empty && this.textBox4.Text != string.Empty && 
+                (this.radioButton1.Checked != false || this.radioButton2.Checked != false || this.radioButton3.Checked != false || this.radioButton4.Checked != false))
+            {
+                Servise.SaveToPdf();
+            }
+            else
+            {
+                MessageBox.Show("User Parameters and Activity must be filled!");
+            }
+                
         }
     }
 }
