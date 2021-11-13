@@ -153,10 +153,10 @@ namespace Business_Layer.Objects
         {
             this.Name = product.Name;
             this.Gramms = product.Gramms;
-            this.Protein = product.Protein;
-            this.Fats = product.Fats;
-            this.Carbs = product.Carbs;
-            this.Calories = product.Calories;
+            this.Protein = product.protein;
+            this.Fats = product.fats;
+            this.Carbs = product.carbs;
+            this.Calories = product.calories;
 
         }
 
