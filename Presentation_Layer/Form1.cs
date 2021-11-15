@@ -178,9 +178,8 @@ namespace Daily_Meal_Planner
                 {
                     if (e.Effect == DragDropEffects.Move)
                     {
-                        (draggedNode.Parent.Tag as MealTime).DelProduct(product);
-
-                        draggedNode.Remove();
+                       (draggedNode.Parent.Tag as MealTime).DelProduct(product);
+                       draggedNode.Remove();
                     }
 
                     Product mealProduct = new Product(product);
